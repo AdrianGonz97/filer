@@ -1,37 +1,52 @@
-use std::error::Error;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::{fs, io};
 
+use anyhow::Result;
 use clap::Parser;
 
-pub fn run() -> Result<(), Box<dyn Error>> {
+pub fn run() -> Result<()> {
     let args = Args::parse();
 
     println!("Path: {}", args.path);
 
-    let path = Path::new(&args.path);
-    dbg!();
-
-    if !path.is_dir() {
-        panic!("File path is not a directory!");
-    }
+    // let path = Path::new(&args.path);
 
     let mut entries = fs::read_dir(args.path)?
         .map(|res| res.map(|e| e.path()))
-        .collect::<Result<Vec<_>, io::Error>>()?;
+        .flatten()
+        .filter(|e| e.is_file())
+        .collect::<Vec<_>>();
 
-    dbg!(entries);
+    dbg!(&entries);
+
+    if let Some(mut ext) = args.extension {
+        // if provided extension begins with a '.', it'll be removed
+        if ext.starts_with('.') {
+            ext.remove(0);
+        }
+
+        let paths = filter(&ext, entries);
+
+        dbg!(&paths);
+    }
 
     Ok(())
 }
 
-pub fn test() {
-    // let cmd = Command::from_args();
+fn append() {}
+
+fn prepend() {}
+
+/// Filters out file paths that do not contain the provided extension
+fn filter(ext: &str, paths: Vec<PathBuf>) -> Vec<PathBuf> {
+    let entries = paths
+        .iter()
+        .filter(|&e| e.extension().unwrap_or_default() == ext)
+        .map(|e| e.to_owned())
+        .collect::<Vec<PathBuf>>();
+
+    return entries;
 }
-
-pub fn append() {}
-
-pub fn prepend() {}
 
 /// Simple program that modifies file names
 #[derive(Parser, Debug)]
