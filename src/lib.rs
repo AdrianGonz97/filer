@@ -10,7 +10,11 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     println!("Path: {}", args.path);
 
     let path = Path::new(&args.path);
-    dbg!(path);
+    dbg!();
+
+    if !path.is_dir() {
+        panic!("File path is not a directory!");
+    }
 
     let mut entries = fs::read_dir(args.path)?
         .map(|res| res.map(|e| e.path()))
@@ -43,4 +47,8 @@ struct Args {
     /// Prepends a provided value to the names of all files in a specified directory
     #[clap(short, long)]
     prepend: Option<String>,
+
+    /// File name modifications only apply to files with the provided extension
+    #[clap(short, long = "ext")]
+    extension: Option<String>,
 }
