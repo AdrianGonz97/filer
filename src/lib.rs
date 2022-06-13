@@ -111,7 +111,7 @@ fn confirm(initial_paths: &Vec<PathBuf>, final_paths: &Vec<PathBuf>) -> Result<(
             "{:^20}{:^10}{:^30}",
             format!("{:?}", initial_paths[i].file_name().unwrap()).bright_red(),
             "->",
-            format!("{:?}", final_paths[i].file_name().unwrap()).green(),
+            format!("{:?}", final_paths[i].file_name().unwrap()).bright_green(),
         )
     }
 
