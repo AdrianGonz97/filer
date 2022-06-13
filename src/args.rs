@@ -25,7 +25,7 @@ pub struct Args {
 
     /// File name modifications only apply to files with the provided extension
     #[clap(short = 'e', long = "ext", parse(try_from_str=validate_extension))]
-    pub extension: Option<Vec<String>>,
+    pub extensions: Option<Vec<String>>,
 }
 
 /// Validates that the provided path is a directory

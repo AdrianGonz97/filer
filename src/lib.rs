@@ -22,7 +22,7 @@ pub fn run() -> Result<()> {
     println!("Renaming files in directory: {}", args.path);
 
     // Filter by extension
-    if let Some(extensions) = args.extension {
+    if let Some(extensions) = args.extensions {
         let mut exts: Vec<String> = vec![];
 
         for mut ext in extensions {
