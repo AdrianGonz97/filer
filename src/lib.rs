@@ -185,7 +185,7 @@ struct Args {
     prefix: Option<String>,
 
     /// File name modifications only apply to files with the provided extension
-    #[clap(short, long = "ext")]
+    #[clap(short = 'e', long = "ext")]
     extension: Option<String>,
 }
 
