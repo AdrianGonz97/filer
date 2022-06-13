@@ -49,6 +49,7 @@ pub fn run() -> Result<()> {
     Ok(())
 }
 
+/// Appends a suffix to the provided Paths
 fn append(suffix: &str, paths: &Vec<PathBuf>) -> Vec<PathBuf> {
     let mut entries = vec![];
 
@@ -72,6 +73,7 @@ fn append(suffix: &str, paths: &Vec<PathBuf>) -> Vec<PathBuf> {
     return entries;
 }
 
+/// Prepends a prefix to the provided Paths
 fn prepend(prefix: &str, paths: &Vec<PathBuf>) -> Vec<PathBuf> {
     let mut entries = vec![];
 
@@ -117,6 +119,7 @@ fn rename_files(from: Vec<PathBuf>, to: Vec<PathBuf>) {
     }
 }
 
+/// Validates that the provided path is a directory
 fn validate_path(s: &str) -> Result<String, String> {
     match fs::read_dir(s) {
         Ok(_) => Ok(s.to_owned()),
