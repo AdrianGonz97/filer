@@ -6,7 +6,7 @@ use std::{
 };
 
 use anyhow::Result;
-use clap::Parser;
+use clap::{ArgGroup, Parser};
 
 pub fn run() -> Result<()> {
     let args = Args::parse();
@@ -32,12 +32,12 @@ pub fn run() -> Result<()> {
     let mut final_paths = entries.clone();
 
     // Prepend
-    if let Some(prefix) = args.prepend {
+    if let Some(prefix) = args.prefix {
         final_paths = prepend(&prefix, &final_paths);
     }
 
     // Append
-    if let Some(suffix) = args.append {
+    if let Some(suffix) = args.suffix {
         final_paths = append(&suffix, &final_paths);
     }
 
@@ -165,18 +165,23 @@ fn confirm(init: &Vec<PathBuf>, fin: &Vec<PathBuf>) -> Result<(), String> {
 /// Simple program that modifies file names
 #[derive(Parser, Debug)]
 #[clap(author, version, about)]
+#[clap(group(
+    ArgGroup::new("action")
+        .required(true)
+        .args(&["suffix", "prefix"]),
+))]
 struct Args {
     /// Path to the target directory
     #[clap(parse(try_from_str=validate_path))]
     path: String,
 
     /// Appends a value to the names of all files in a specified directory
-    #[clap(short, long)]
-    append: Option<String>,
+    #[clap(short = 'a', long = "append")]
+    suffix: Option<String>,
 
     /// Prepends a value to the names of all files in a specified directory
-    #[clap(short, long)]
-    prepend: Option<String>,
+    #[clap(short = 'p', long = "prepend")]
+    prefix: Option<String>,
 
     /// File name modifications only apply to files with the provided extension
     #[clap(short, long = "ext")]
