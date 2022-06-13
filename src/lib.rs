@@ -56,13 +56,13 @@ pub fn run() -> Result<()> {
 }
 
 /// Applies the modification to all file names
-fn rename_files(from: Vec<PathBuf>, to: Vec<PathBuf>) {
-    for i in 0..from.len() {
-        match fs::rename(&from[i], &to[i]) {
+fn rename_files(initial_paths: Vec<PathBuf>, final_paths: Vec<PathBuf>) {
+    for i in 0..initial_paths.len() {
+        match fs::rename(&initial_paths[i], &final_paths[i]) {
             Ok(()) => println!(
                 "Renaming file: {:?} -> {:?}",
-                from[i].file_name().unwrap(),
-                to[i].file_name().unwrap()
+                initial_paths[i].file_name().unwrap(),
+                final_paths[i].file_name().unwrap()
             ),
             Err(e) => eprintln!("{}", e),
         }
@@ -70,20 +70,20 @@ fn rename_files(from: Vec<PathBuf>, to: Vec<PathBuf>) {
 }
 
 /// Confirms the changes with the user
-fn confirm(init: &Vec<PathBuf>, fin: &Vec<PathBuf>) -> Result<(), String> {
-    if fin.len() == 0 {
+fn confirm(initial_paths: &Vec<PathBuf>, final_paths: &Vec<PathBuf>) -> Result<(), String> {
+    if final_paths.len() == 0 {
         return Err(format!(
             "There are no files to rename that match the provided arguments!"
         ));
     }
 
-    println!("\nRenaming {} files:", init.len());
-    for i in 0..init.len() {
+    println!("\nRenaming {} files:", initial_paths.len());
+    for i in 0..initial_paths.len() {
         println!(
             "{:^20}{:^10}{:^30}",
-            init[i].file_name().unwrap().to_str().unwrap(),
+            initial_paths[i].file_name().unwrap().to_str().unwrap(),
             "->",
-            fin[i].file_name().unwrap().to_str().unwrap(),
+            final_paths[i].file_name().unwrap().to_str().unwrap(),
         )
     }
 
