@@ -20,13 +20,17 @@ pub fn run() -> Result<()> {
     println!("Renaming files in directory: {}", args.path);
 
     // Filter by extension
-    if let Some(mut ext) = args.extension {
-        // if provided extension begins with a '.', it'll be removed
-        if ext.starts_with('.') {
-            ext.remove(0);
-        }
+    if let Some(extensions) = args.extension {
+        let mut exts: Vec<String> = vec![];
 
-        entries = filter(&ext, entries);
+        for mut ext in extensions {
+            // if provided extension begins with a '.', it'll be removed
+            if ext.starts_with('.') {
+                ext.remove(0);
+            }
+            exts.push(ext);
+        }
+        entries = filter(exts, entries);
     }
 
     let mut final_paths = entries.clone();
@@ -95,10 +99,17 @@ fn prepend(prefix: &str, paths: &Vec<PathBuf>) -> Vec<PathBuf> {
 }
 
 /// Filters out file paths that do not contain the provided extension
-fn filter(ext: &str, paths: Vec<PathBuf>) -> Vec<PathBuf> {
+fn filter(extensions: Vec<String>, paths: Vec<PathBuf>) -> Vec<PathBuf> {
     let entries = paths
         .iter()
-        .filter(|&e| e.extension().unwrap_or_default() == ext)
+        .filter(|&e| {
+            for ext in &extensions {
+                if e.extension().unwrap_or_default() == ext.as_str() {
+                    return true;
+                }
+            }
+            return false;
+        })
         .map(|e| e.to_owned())
         .collect::<Vec<PathBuf>>();
 
@@ -135,7 +146,7 @@ fn confirm(init: &Vec<PathBuf>, fin: &Vec<PathBuf>) -> Result<(), String> {
         ));
     }
 
-    println!("\nRenaming the following files:");
+    println!("\nRenaming {} files:", init.len());
     for i in 0..init.len() {
         println!(
             "{:^20}{:^10}{:^30}",
@@ -186,7 +197,7 @@ struct Args {
 
     /// File name modifications only apply to files with the provided extension
     #[clap(short = 'e', long = "ext")]
-    extension: Option<String>,
+    extension: Option<Vec<String>>,
 }
 
 #[cfg(test)]
@@ -227,7 +238,7 @@ mod tests {
                 PathBuf::from("./bar.txt"),
                 PathBuf::from("./baz.txt")
             ],
-            filter("txt", paths)
+            filter(vec!["txt".to_owned()], paths)
         );
     }
 }
