@@ -71,7 +71,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "file-rename"
+name = "filer"
 version = "0.1.0"
 dependencies = [
  "anyhow",
