@@ -1,5 +1,6 @@
 use anyhow::Result;
 use clap::Parser;
+use colored::Colorize;
 use std::path::PathBuf;
 use std::{
     fs,
@@ -19,7 +20,7 @@ pub fn run() -> Result<()> {
         .filter(|e| e.is_file())
         .collect::<Vec<_>>();
 
-    println!("Renaming files in directory: {}", args.path);
+    print_path(&args.path)?;
 
     // Filter by extension
     if let Some(extensions) = args.extensions {
@@ -49,24 +50,48 @@ pub fn run() -> Result<()> {
 
     match confirm(&entries, &final_paths) {
         Ok(()) => rename_files(entries, final_paths),
-        Err(e) => eprintln!("{e}"),
+        Err(e) => eprintln!("{}", format!("\n{e}").bright_red()),
     }
+
+    Ok(())
+}
+
+use path_clean::PathClean;
+fn print_path(path: &str) -> Result<()> {
+    let path = PathBuf::from(path);
+
+    let absolute_path = if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        std::env::current_dir()?.join(path)
+    }
+    .clean();
+
+    println!(
+        "Renaming files in directory: {}",
+        format!("{:?}", absolute_path).bright_cyan()
+    );
 
     Ok(())
 }
 
 /// Applies the name modification to targeted files
 fn rename_files(initial_paths: Vec<PathBuf>, final_paths: Vec<PathBuf>) {
+    println!("\n{}", format!("Initiating operation...").bright_cyan());
     for i in 0..initial_paths.len() {
         match fs::rename(&initial_paths[i], &final_paths[i]) {
             Ok(()) => println!(
-                "Renaming file: {:?} -> {:?}",
-                initial_paths[i].file_name().unwrap(),
-                final_paths[i].file_name().unwrap()
+                "{:^20}{:^10}{:^30}",
+                format!("{:?}", initial_paths[i].file_name().unwrap())
+                    .strikethrough()
+                    .red(),
+                "->",
+                format!("{:?}", final_paths[i].file_name().unwrap()).bright_green(),
             ),
             Err(e) => eprintln!("{}", e),
         }
     }
+    println!("\n{}", format!("Operation completed!").bright_green());
 }
 
 /// Confirms the changes with the user
@@ -77,13 +102,16 @@ fn confirm(initial_paths: &Vec<PathBuf>, final_paths: &Vec<PathBuf>) -> Result<(
         ));
     }
 
-    println!("\nRenaming {} files:", initial_paths.len());
+    println!(
+        "\nRenaming {} files:",
+        format!("{}", initial_paths.len()).bright_cyan()
+    );
     for i in 0..initial_paths.len() {
         println!(
             "{:^20}{:^10}{:^30}",
-            initial_paths[i].file_name().unwrap().to_str().unwrap(),
+            format!("{:?}", initial_paths[i].file_name().unwrap()).red(),
             "->",
-            final_paths[i].file_name().unwrap().to_str().unwrap(),
+            format!("{:?}", final_paths[i].file_name().unwrap()).green(),
         )
     }
 
