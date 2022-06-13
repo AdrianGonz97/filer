@@ -167,11 +167,11 @@ struct Args {
     #[clap(parse(try_from_str=validate_path))]
     path: String,
 
-    /// Appends a provided value to the names of all files in a specified directory
+    /// Appends a value to the names of all files in a specified directory
     #[clap(short, long)]
     append: Option<String>,
 
-    /// Prepends a provided value to the names of all files in a specified directory
+    /// Prepends a value to the names of all files in a specified directory
     #[clap(short, long)]
     prepend: Option<String>,
 
