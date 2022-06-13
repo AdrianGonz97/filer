@@ -182,3 +182,46 @@ struct Args {
     #[clap(short, long = "ext")]
     extension: Option<String>,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn append_paths() {
+        let paths = vec![PathBuf::from("./foo.txt"), PathBuf::from("./bar.txt")];
+
+        assert_eq!(
+            vec![PathBuf::from("./foobaz.txt"), PathBuf::from("./barbaz.txt")],
+            append("baz", &paths)
+        );
+    }
+
+    #[test]
+    fn prepend_paths() {
+        let paths = vec![PathBuf::from("./foo.txt"), PathBuf::from("./bar.txt")];
+
+        assert_eq!(
+            vec![PathBuf::from("./bazfoo.txt"), PathBuf::from("./bazbar.txt")],
+            prepend("baz", &paths)
+        );
+    }
+
+    #[test]
+    fn filter_by_extensions_paths() {
+        let paths = vec![
+            PathBuf::from("./foo.txt"),
+            PathBuf::from("./bar.txt"),
+            PathBuf::from("./baz.txt"),
+        ];
+
+        assert_eq!(
+            vec![
+                PathBuf::from("./foo.txt"),
+                PathBuf::from("./bar.txt"),
+                PathBuf::from("./baz.txt")
+            ],
+            filter("txt", paths)
+        );
+    }
+}
