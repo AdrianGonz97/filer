@@ -44,7 +44,7 @@ pub fn run() -> Result<()> {
 
     match confirm(&entries, &final_paths) {
         Ok(()) => rename_files(entries, final_paths),
-        Err(e) => println!("{e}"),
+        Err(e) => eprintln!("{e}"),
     }
 
     Ok(())
@@ -125,7 +125,14 @@ fn validate_path(s: &str) -> Result<String, String> {
     }
 }
 
+/// Confirms with the user that the
 fn confirm(init: &Vec<PathBuf>, fin: &Vec<PathBuf>) -> Result<(), String> {
+    if fin.len() == 0 {
+        return Err(format!(
+            "There are no files to rename that match the provided arguments!"
+        ));
+    }
+
     println!("\nRenaming the following files:");
     for i in 0..init.len() {
         println!(
