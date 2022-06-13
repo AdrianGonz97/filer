@@ -104,7 +104,7 @@ fn confirm(initial_paths: &Vec<PathBuf>, final_paths: &Vec<PathBuf>) -> Result<(
 
     println!(
         "\nRenaming {} files:",
-        format!("{}", initial_paths.len()).bright_cyan()
+        format!("{}", initial_paths.len()).bright_cyan().bold()
     );
     for i in 0..initial_paths.len() {
         println!(
