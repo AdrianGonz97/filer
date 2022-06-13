@@ -32,16 +32,40 @@ pub struct Args {
 pub fn validate_path(s: &str) -> Result<String, String> {
     match fs::read_dir(s) {
         Ok(_) => Ok(s.to_owned()),
-        Err(_) => Err(format!("Target path must be a directory.")),
+        Err(_) => Err("Target path must be a directory.".to_owned()),
     }
 }
 
 /// Validates that the provided extension doesn't include a '.'
 pub fn validate_extension(s: &str) -> Result<String, String> {
     if s.starts_with('.') {
-        return Err(format!(
-            "Please exclude the '.' character from that start of your extension."
-        ));
+        return Err(
+            "Please exclude the '.' character from that start of your extension.".to_owned(),
+        );
     }
     return Ok(s.to_owned());
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn valid_path() {
+        assert_eq!(
+            Err(format!("Target path must be a directory.")),
+            validate_path("somerandomname")
+        );
+        assert_eq!(Ok(".".to_owned()), validate_path("."));
+    }
+
+    #[test]
+    fn valid_extension() {
+        assert_eq!(
+            Err("Please exclude the '.' character from that start of your extension.".to_owned()),
+            validate_extension(".txt")
+        );
+
+        assert_eq!(Ok("txt".to_owned()), validate_extension("txt"));
+    }
 }
