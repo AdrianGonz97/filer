@@ -55,7 +55,7 @@ pub fn run() -> Result<()> {
     Ok(())
 }
 
-/// Applies the modification to all file names
+/// Applies the name modification to targeted files
 fn rename_files(initial_paths: Vec<PathBuf>, final_paths: Vec<PathBuf>) {
     for i in 0..initial_paths.len() {
         match fs::rename(&initial_paths[i], &final_paths[i]) {
