@@ -55,7 +55,7 @@ pub fn run() -> Result<()> {
     Ok(())
 }
 
-/// Renames all of the files
+/// Applies the modification to all file names
 fn rename_files(from: Vec<PathBuf>, to: Vec<PathBuf>) {
     for i in 0..from.len() {
         match fs::rename(&from[i], &to[i]) {
@@ -69,7 +69,7 @@ fn rename_files(from: Vec<PathBuf>, to: Vec<PathBuf>) {
     }
 }
 
-/// Confirms with the user that the
+/// Confirms the changes with the user
 fn confirm(init: &Vec<PathBuf>, fin: &Vec<PathBuf>) -> Result<(), String> {
     if fin.len() == 0 {
         return Err(format!(
