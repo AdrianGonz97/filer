@@ -168,6 +168,7 @@ fn confirm(init: &Vec<PathBuf>, fin: &Vec<PathBuf>) -> Result<(), String> {
 #[clap(group(
     ArgGroup::new("action")
         .required(true)
+        .multiple(true)
         .args(&["suffix", "prefix"]),
 ))]
 struct Args {
