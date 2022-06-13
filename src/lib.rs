@@ -84,7 +84,7 @@ fn rename_files(initial_paths: Vec<PathBuf>, final_paths: Vec<PathBuf>) {
                 "{:^20}{:^10}{:^30}",
                 format!("{:?}", initial_paths[i].file_name().unwrap())
                     .strikethrough()
-                    .red(),
+                    .bright_red(),
                 "->",
                 format!("{:?}", final_paths[i].file_name().unwrap()).bright_green(),
             ),
@@ -109,7 +109,7 @@ fn confirm(initial_paths: &Vec<PathBuf>, final_paths: &Vec<PathBuf>) -> Result<(
     for i in 0..initial_paths.len() {
         println!(
             "{:^20}{:^10}{:^30}",
-            format!("{:?}", initial_paths[i].file_name().unwrap()).red(),
+            format!("{:?}", initial_paths[i].file_name().unwrap()).bright_red(),
             "->",
             format!("{:?}", final_paths[i].file_name().unwrap()).green(),
         )
