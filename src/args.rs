@@ -8,7 +8,7 @@ use std::fs;
     ArgGroup::new("action")
         .required(true)
         .multiple(true)
-        .args(&["suffix", "prefix"]),
+        .args(&["suffix", "prefix", "delete", "replace"]),
 ))]
 pub struct Args {
     /// Path to the target directory
