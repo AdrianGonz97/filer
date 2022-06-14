@@ -67,6 +67,7 @@ pub fn run() -> Result<()> {
 }
 
 use path_clean::PathClean;
+/// Prints the path of the targeted directory
 fn print_path(path: &str) -> Result<()> {
     let path = PathBuf::from(path);
 
@@ -85,7 +86,7 @@ fn print_path(path: &str) -> Result<()> {
     Ok(())
 }
 
-/// Applies the name modification to targeted files
+/// Applies the file name changes to targeted files
 fn rename_files(initial_paths: Vec<PathBuf>, final_paths: Vec<PathBuf>) {
     println!("\n{}", format!("Initiating operation...").bright_cyan());
     for i in 0..initial_paths.len() {
