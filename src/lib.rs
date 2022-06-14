@@ -33,19 +33,19 @@ pub fn run() -> Result<()> {
             }
             exts.push(ext);
         }
-        entries = filter(exts, entries);
+        entries = filter(exts, &entries);
     }
 
     let mut final_paths = entries.clone();
 
     // Delete
     if let Some(value) = args.delete {
-        final_paths = delete(&value, final_paths);
+        final_paths = delete(&value, &final_paths);
     }
 
     // Replace
     if let Some(value) = args.replace {
-        final_paths = replace(&value[0], &value[1], final_paths);
+        final_paths = replace(&value[0], &value[1], &final_paths);
     }
 
     // Prepend

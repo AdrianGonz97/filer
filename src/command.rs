@@ -47,7 +47,7 @@ pub fn prepend(prefix: &str, paths: &Vec<PathBuf>) -> Vec<PathBuf> {
 }
 
 /// Filters out file paths that do not contain the provided extension
-pub fn filter(extensions: Vec<String>, paths: Vec<PathBuf>) -> Vec<PathBuf> {
+pub fn filter(extensions: Vec<String>, paths: &Vec<PathBuf>) -> Vec<PathBuf> {
     let entries = paths
         .iter()
         .filter(|&e| {
@@ -65,7 +65,7 @@ pub fn filter(extensions: Vec<String>, paths: Vec<PathBuf>) -> Vec<PathBuf> {
 }
 
 // Replaces all matches in the file name. Delimited by a ";"
-pub fn replace(from: &str, to: &str, paths: Vec<PathBuf>) -> Vec<PathBuf> {
+pub fn replace(from: &str, to: &str, paths: &Vec<PathBuf>) -> Vec<PathBuf> {
     let paths = paths
         .iter()
         .map(|path| {
@@ -85,7 +85,7 @@ pub fn replace(from: &str, to: &str, paths: Vec<PathBuf>) -> Vec<PathBuf> {
 }
 
 // Deletes all matches in the file name
-pub fn delete(str: &str, paths: Vec<PathBuf>) -> Vec<PathBuf> {
+pub fn delete(str: &str, paths: &Vec<PathBuf>) -> Vec<PathBuf> {
     let paths = paths
         .iter()
         .map(|path| {
@@ -144,7 +144,7 @@ mod tests {
                 PathBuf::from("temp/a bar.oof"),
                 PathBuf::from("foo/a oof.txt"),
             ],
-            replace("foo", "oof", paths)
+            replace("foo", "oof", &paths)
         );
     }
 
@@ -164,7 +164,7 @@ mod tests {
                 PathBuf::from("temp/a bar."),
                 PathBuf::from("foo/a .txt"),
             ],
-            delete("foo", paths)
+            delete("foo", &paths)
         );
     }
 
@@ -182,7 +182,7 @@ mod tests {
                 PathBuf::from("./bar.txt"),
                 PathBuf::from("./baz.txt")
             ],
-            filter(vec!["txt".to_owned()], paths)
+            filter(vec!["txt".to_owned()], &paths)
         );
     }
 }
