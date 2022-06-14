@@ -64,6 +64,50 @@ pub fn filter(extensions: Vec<String>, paths: Vec<PathBuf>) -> Vec<PathBuf> {
     return entries;
 }
 
+// Replaces all matches in the file name. Delimited by a "->"
+pub fn replace(str: &str, paths: Vec<PathBuf>) -> Vec<PathBuf> {
+    let (from, to) = str
+        .split_once("->")
+        .expect("expected replace to have 2 arguments");
+
+    let paths = paths
+        .iter()
+        .map(|path| {
+            let mut path = path.to_owned();
+            let file_name = path.file_name()?.to_str()?;
+            let file_name = file_name.replace(from, to);
+
+            path.pop();
+            path.push(file_name);
+
+            return Some(path);
+        })
+        .flatten()
+        .collect::<Vec<PathBuf>>();
+
+    return paths;
+}
+
+// Deletes all matches in the file name
+pub fn delete(str: &str, paths: Vec<PathBuf>) -> Vec<PathBuf> {
+    let paths = paths
+        .iter()
+        .map(|path| {
+            let mut path = path.to_owned();
+            let file_name = path.file_name()?.to_str()?;
+            let file_name = file_name.replace(str, "");
+
+            path.pop();
+            path.push(file_name);
+
+            return Some(path);
+        })
+        .flatten()
+        .collect::<Vec<PathBuf>>();
+
+    return paths;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -85,6 +129,46 @@ mod tests {
         assert_eq!(
             vec![PathBuf::from("./bazfoo.txt"), PathBuf::from("./bazbar.txt")],
             prepend("baz", &paths)
+        );
+    }
+
+    #[test]
+    fn replace_match() {
+        let paths = vec![
+            PathBuf::from("./a foo.txt"),
+            PathBuf::from("./a bar.txt"),
+            PathBuf::from("temp/a bar.foo"),
+            PathBuf::from("foo/a foo.txt"),
+        ];
+
+        assert_eq!(
+            vec![
+                PathBuf::from("./a oof.txt"),
+                PathBuf::from("./a bar.txt"),
+                PathBuf::from("temp/a bar.oof"),
+                PathBuf::from("foo/a oof.txt"),
+            ],
+            replace("foo->oof", paths)
+        );
+    }
+
+    #[test]
+    fn delete_match() {
+        let paths = vec![
+            PathBuf::from("./a foo.txt"),
+            PathBuf::from("./a bar.txt"),
+            PathBuf::from("temp/a bar.foo"),
+            PathBuf::from("foo/a foo.txt"),
+        ];
+
+        assert_eq!(
+            vec![
+                PathBuf::from("./a .txt"),
+                PathBuf::from("./a bar.txt"),
+                PathBuf::from("temp/a bar."),
+                PathBuf::from("foo/a .txt"),
+            ],
+            delete("foo", paths)
         );
     }
 
