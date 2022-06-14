@@ -38,6 +38,16 @@ pub fn run() -> Result<()> {
 
     let mut final_paths = entries.clone();
 
+    // Delete
+    if let Some(value) = args.delete {
+        final_paths = delete(&value, final_paths);
+    }
+
+    // Replace
+    if let Some(value) = args.replace {
+        final_paths = replace(&value, final_paths);
+    }
+
     // Prepend
     if let Some(prefix) = args.prefix {
         final_paths = prepend(&prefix, &final_paths);
