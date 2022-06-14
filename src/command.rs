@@ -64,12 +64,8 @@ pub fn filter(extensions: Vec<String>, paths: Vec<PathBuf>) -> Vec<PathBuf> {
     return entries;
 }
 
-// Replaces all matches in the file name. Delimited by a "->"
-pub fn replace(str: &str, paths: Vec<PathBuf>) -> Vec<PathBuf> {
-    let (from, to) = str
-        .split_once("->")
-        .expect("expected replace to have 2 arguments");
-
+// Replaces all matches in the file name. Delimited by a ";"
+pub fn replace(from: &str, to: &str, paths: Vec<PathBuf>) -> Vec<PathBuf> {
     let paths = paths
         .iter()
         .map(|path| {
@@ -148,7 +144,7 @@ mod tests {
                 PathBuf::from("temp/a bar.oof"),
                 PathBuf::from("foo/a oof.txt"),
             ],
-            replace("foo->oof", paths)
+            replace("foo", "oof", paths)
         );
     }
 

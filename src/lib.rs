@@ -45,7 +45,7 @@ pub fn run() -> Result<()> {
 
     // Replace
     if let Some(value) = args.replace {
-        final_paths = replace(&value, final_paths);
+        final_paths = replace(&value[0], &value[1], final_paths);
     }
 
     // Prepend

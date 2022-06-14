@@ -23,9 +23,13 @@ pub struct Args {
     #[clap(short = 'p', long = "prepend")]
     pub prefix: Option<String>,
 
-    /// Replaces all matches in the file name. Delimited with a "->". ex: "from->to"
-    #[clap(short = 'r', long = "replace", value_name = "VALUE", parse(try_from_str=validate_replace))]
-    pub replace: Option<String>,
+    /// Replaces all matches in the file name.
+    #[clap(
+        short = 'r',
+        long = "replace",
+        value_names = &["OLD", "NEW"],
+    )]
+    pub replace: Option<Vec<String>>,
 
     /// Deletes all matches in the file name.
     #[clap(short = 'd', long = "delete", value_name = "VALUE")]
@@ -54,14 +58,6 @@ pub fn validate_extension(s: &str) -> Result<String, String> {
     return Ok(s.to_owned());
 }
 
-/// Validates that the provided value contains the "->" delimiter.
-pub fn validate_replace(s: &str) -> Result<String, String> {
-    if !s.contains("->") {
-        return Err("The \"->\" delimiter is missing. Use as such: \"old->new\"".to_owned());
-    }
-    return Ok(s.to_owned());
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -83,15 +79,5 @@ mod tests {
         );
 
         assert_eq!(Ok("txt".to_owned()), validate_extension("txt"));
-    }
-
-    #[test]
-    fn valid_replace() {
-        assert_eq!(
-            Err("The \"->\" delimiter is missing. Use as such: \"old->new\"".to_owned()),
-            validate_replace("from to")
-        );
-
-        assert_eq!(Ok("from->to".to_owned()), validate_replace("from->to"));
     }
 }
