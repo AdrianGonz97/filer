@@ -1,6 +1,6 @@
 # Filer
 
-A file management CLI tool for renaming files in batches.
+A simple file management CLI tool for renaming files in batches.
 
 ## Features
 
