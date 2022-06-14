@@ -3,7 +3,7 @@ name = "filer"
 version = "0.1.0"
 edition = "2021"
 author = "AdrianGonz97"
-description = "File management tool for bulk renaming files."
+description = "File management tool for renaming files in batches."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

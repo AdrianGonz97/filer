@@ -24,15 +24,15 @@ pub struct Args {
     pub prefix: Option<String>,
 
     /// Replaces all matches in the file name. Delimited with a "->". ex: "from->to"
-    #[clap(short = 'r', long = "replace", parse(try_from_str=validate_replace))]
+    #[clap(short = 'r', long = "replace", value_name = "VALUE", parse(try_from_str=validate_replace))]
     pub replace: Option<String>,
 
     /// Deletes all matches in the file name.
-    #[clap(short = 'd', long = "delete")]
+    #[clap(short = 'd', long = "delete", value_name = "VALUE")]
     pub delete: Option<String>,
 
     /// File name changes only apply to files with the provided extension
-    #[clap(short = 'e', long = "ext", parse(try_from_str=validate_extension))]
+    #[clap(short = 'e', short_alias = 'x', long = "ext", value_name = "EXTENSION", parse(try_from_str=validate_extension))]
     pub extensions: Option<Vec<String>>,
 }
 
